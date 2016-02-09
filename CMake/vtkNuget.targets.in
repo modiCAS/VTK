@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+        %(AdditionalIncludeDirectories);
+        $(MSBuildThisFileDirectory)include;
+        $(MSBuildThisFileDirectory)$(VisualStudioVersion)\$(Platform)\$(Configuration)\include
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>
+        %(AdditionalIncludeDirectories);
+        $(MSBuildThisFileDirectory)include;
+        $(MSBuildThisFileDirectory)$(VisualStudioVersion)\$(Platform)\$(Configuration)\include
+      </AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="VTK Libraries">
+    <Link>
+      <AdditionalDependencies>
+        $(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\vtkImagingStencil-6.0.lib;
+        %(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
+

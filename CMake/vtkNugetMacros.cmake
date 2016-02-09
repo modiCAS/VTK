@@ -1,0 +1,7 @@
+function(vtk_nuget_export)
+  get_property(target-path TARGET ${vtk-module} PROPERTY LOCATION)
+  message("Module: ${vtk-module} ${VTK_VERSION}")
+  message("Headers: ${_hdrs}")
+  message("Dependencies: ${${vtk-module}_LINK_DEPENDS} Private: ${${vtk-module}_PRIVATE_DEPENDS}")
+  message("Target Path: ${target-path}")
+endfunction()

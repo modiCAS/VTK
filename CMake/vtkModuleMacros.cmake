@@ -854,6 +854,7 @@ VTK_AUTOINIT(${vtk-module})
 
   # Export the module information.
   vtk_module_export("${ARGN}")
+  vtk_nuget_export()
 
   # Figure out which headers to install.
   if(NOT VTK_INSTALL_NO_DEVELOPMENT AND NOT VTK_INSTALL_NO_HEADERS AND _hdrs)
