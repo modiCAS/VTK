@@ -17,14 +17,14 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <PropertyGroup>
-    <@vtk-module@Found>false</@vtk-module@Found>
+    <@module@Found>false</@module@Found>
   </PropertyGroup>
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@vtk-module@.targets"
-          Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@vtk-module@.targets')" />
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\@vtk-module@.targets"
-          Condition="!@vtk-module@Found And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@vtk-module@.targets')" />
-  <Target Name="Ensure@vtk-module@Exists" BeforeTargets="PrepareForBuild">
-    <Error Condition="@vtk-module@Found"
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets"
+          Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets')" />
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\@module@.targets"
+          Condition="!$(@module@Found) And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets')" />
+  <Target Name="Ensure@module@Exists" BeforeTargets="PrepareForBuild">
+    <Error Condition="$(@module@Found)"
            Text="This project references a VTK configuration ($(VisualStudioVersion) ($Platform) $(Configuration)) that is not provided by this NuGet package." />
   </Target>
 </Project>

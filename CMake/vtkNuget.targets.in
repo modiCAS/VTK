@@ -3,12 +3,12 @@
   <ItemDefinitionGroup Label="VTK Libraries">
     <Link>
       <AdditionalDependencies>
-        $(MSBuildThisFileDirectory)$<TARGET_LINKER_FILE_NAME:@vtk-module@>;
+        $(MSBuildThisFileDirectory)$<TARGET_LINKER_FILE_NAME:@module@>;
         %(AdditionalDependencies)
       </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup>
-    <@vtk-module@Found Condition="Exists('$(MSBuildThisFileDirectory)$<TARGET_LINKER_FILE_NAME:@vtk-module@>')">true</@vtk-module@Found>
+    <@module@Found Condition="Exists('$(MSBuildThisFileDirectory)$<TARGET_LINKER_FILE_NAME:@module@>')">true</@module@Found>
   </PropertyGroup>
 </Project>
