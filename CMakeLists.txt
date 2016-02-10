@@ -73,7 +73,6 @@ ENDIF()
 set(VTK_CMAKE_DIR "${VTK_SOURCE_DIR}/CMake")
 set(CMAKE_MODULE_PATH ${VTK_CMAKE_DIR} ${CMAKE_MODULE_PATH})
 
-include(vtkNugetMacros)
 include(vtkModuleMacros)
 include(vtkExternalData)
 
@@ -123,6 +122,8 @@ mark_as_advanced(CMAKE_RUNTIME_OUTPUT_DIRECTORY
 include(vtkVersion)
 set(VTK_VERSION
     "${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}.${VTK_BUILD_VERSION}")
+
+include(vtkNugetMacros)
 
 #-----------------------------------------------------------------------------
 # Do we want examples built?

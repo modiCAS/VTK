@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>@vtk-module@</id>
-    <version>@VTK_VERSION@</version>
-    <title>@vtk-module@ @VTK_VERSION@</title>
+    <version>@NUGET_PACK_VERSION@</version>
+    <title>@vtk-module@ @NUGET_PACK_VERSION@</title>
     <authors>Kitware Inc.</authors>
     <owners>modiCAS GmbH</owners>
     <licenseUrl>http://www.vtk.org/VTK/project/license.html</licenseUrl>
@@ -12,17 +12,12 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Visualization Toolkit (VTK) is an open source, freely available software system for 3D computer graphics,
       modeling, image processing, volume rendering, scientific visualization and information visualization.</description>
-    <summary>@vtk-module@ VTK module of the Visualization Toolkit (VTK) @VTK_VERSION@.</summary>
+    <summary>@vtk-module@ VTK module of the Visualization Toolkit (VTK) @NUGET_PACK_VERSION@.</summary>
     <releaseNotes />
     <copyright>Copyright (c) 1993-2016 Ken Martin, Will Schroeder, Bill Lorensen</copyright>
     <tags>C++ VTK Visualization Toolkit 3D @vtk-module@ @vtk-nuget-keywords@</tags>
     <dependencies>
-      @vtk-nuget-dependencies@
+      @vtk_nuget_dependencies@
     </dependencies>
   </metadata>
-  <files>
-    <file src="@vtk-module@.targets" target="build\native\@vtk-module@.targets" />
-    <file src="$<TARGET_FILE_NAME:@vtk-module@>" target="build\native\lib\$VisualStudioVersion$\$Platform$\$Configuration$" />
-    @vtk-nuget-files@
-  </files>
 </package>
