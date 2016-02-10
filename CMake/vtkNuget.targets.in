@@ -19,7 +19,7 @@
   <ItemDefinitionGroup Label="VTK Libraries">
     <Link>
       <AdditionalDependencies>
-        $(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\vtkImagingStencil-6.0.lib;
+        $(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\$<TARGET_FILE_NAME:@vtk-module@>;
         %(AdditionalDependencies)
       </AdditionalDependencies>
     </Link>
