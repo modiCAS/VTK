@@ -15,20 +15,14 @@
     <summary>@vtk-module@ VTK module of the Visualization Toolkit (VTK) @VTK_VERSION@.</summary>
     <releaseNotes />
     <copyright>Copyright (c) 1993-2016 Ken Martin, Will Schroeder, Bill Lorensen</copyright>
-    <tags>C++ VTK Visualization Toolkit 3D @vtk-module@</tags>
+    <tags>C++ VTK Visualization Toolkit 3D @vtk-module@ @vtk-nuget-keywords@</tags>
     <dependencies>
-      <dependency id="vtkCommonExecutionModel" version="6.0.0" />
-      <dependency id="vtkCommonTransforms" version="6.0.0" />
-      <dependency id="vtkFiltersExtraction" version="6.0.0" />
-      <dependency id="vtkFiltersGeneral" version="6.0.0" />
-      <dependency id="vtkFiltersGeometry" version="6.0.0" />
-      <dependency id="vtkFiltersSources" version="6.0.0" />
-      <dependency id="vtkIOImage" version="6.0.0" />
-      <dependency id="vtkIOXMLParser" version="6.0.0" />
+      @vtk-nuget-dependencies@
     </dependencies>
   </metadata>
   <files>
     <file src="@vtk-module@.targets" target="build\native\@vtk-module@.targets" />
-    <file src="..." target="build\native\lib\$VisualStudioVersion$\$Platform$\$Configuration$" />
+    <file src="$<TARGET_FILE_NAME:@vtk-module@>" target="build\native\lib\$VisualStudioVersion$\$Platform$\$Configuration$" />
+    @vtk-nuget-files@
   </files>
 </package>
