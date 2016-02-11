@@ -5,26 +5,22 @@
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);
         $(MSBuildThisFileDirectory)include;
-        $(MSBuildThisFileDirectory)$(VisualStudioVersion)\$(Platform)\include
+        $(MSBuildThisFileDirectory)include\$(VisualStudioVersion)\$(Platform)
       </AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);
         $(MSBuildThisFileDirectory)include;
-        $(MSBuildThisFileDirectory)$(VisualStudioVersion)\$(Platform)\include
+        $(MSBuildThisFileDirectory)include\$(VisualStudioVersion)\$(Platform)
       </AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <PropertyGroup>
     <@module@Found>false</@module@Found>
   </PropertyGroup>
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets"
-          Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets')" />
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\@module@.targets"
-          Condition="!$(@module@Found) And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\@module@.targets')" />
-  <Target Name="Ensure@module@Exists" BeforeTargets="PrepareForBuild">
-    <Error Condition="$(@module@Found)"
-           Text="This project references a VTK configuration ($(VisualStudioVersion) ($Platform) $(Configuration)) that is not provided by this NuGet package." />
-  </Target>
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@module@.targets"
+          Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@module@.targets')" />
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@module@.targets"
+          Condition="!$(@module@Found) And '$(Configuration)' != 'Release' And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@module@.targets')" />
 </Project>
