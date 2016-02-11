@@ -532,6 +532,7 @@ endfunction()
 
 function(vtk_add_library name)
   add_library(${name} ${ARGN} ${headers})
+  vtk_nuget_export(LIBRARY ${name})
   if(NOT ARGV1 STREQUAL OBJECT)
     vtk_target(${name})
   endif()
@@ -766,7 +767,6 @@ VTK_AUTOINIT(${vtk-module})
 
   # Export the module information.
   vtk_module_export("${ARGN}")
-  vtk_nuget_export(${vtk-module})
 
   # Figure out which headers to install.
   if(NOT VTK_INSTALL_NO_DEVELOPMENT AND NOT VTK_INSTALL_NO_HEADERS AND _hdrs)
