@@ -8,7 +8,7 @@
       </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <PropertyGroup>
-    <@module@Found Condition="Exists('$(MSBuildThisFileDirectory)$<TARGET_LINKER_FILE_NAME:@module@>')">true</@module@Found>
-  </PropertyGroup>
+  <ItemGroup>
+    <NativeReferenceFile Include="$(MSBuildThisFileDirectory)$<TARGET_FILE_NAME:@module@>" />
+  </ItemGroup>
 </Project>
