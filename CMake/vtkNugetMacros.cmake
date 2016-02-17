@@ -177,7 +177,8 @@ function(vtk_nuget_export type module)
     get_filename_component(header_name ${header} NAME)
     add_custom_command(OUTPUT ${header_path}/${header_name}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${header_path}
-      COMMAND IF EXIST ${header} ${CMAKE_COMMAND} -E copy_if_different ${header} ${header_path})
+      COMMAND IF EXIST ${header} ${CMAKE_COMMAND} -E copy_if_different ${header} ${header_path}
+      DEPENDS ${header})
     list(APPEND copy_headers ${header_path}/${header_name})
   endforeach()
 
@@ -186,7 +187,8 @@ function(vtk_nuget_export type module)
   file(GENERATE OUTPUT ${CMAKE_BINARY_DIR}/${module}.nuspec INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec.in)
   add_custom_command(OUTPUT ${nuget_obj}/${module}.nuspec
     COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_obj}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/${module}.nuspec ${nuget_obj})
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/${module}.nuspec ${nuget_obj}
+    DEPENDS ${CMAKE_BINARY_DIR}/${module}.nuspec)
   list(APPEND copy_headers ${nuget_obj}/${module}.nuspec)
 
   # configure and generate custom targets file to be inserted into a project referencing the package
@@ -194,7 +196,8 @@ function(vtk_nuget_export type module)
   file(GENERATE OUTPUT ${CMAKE_BINARY_DIR}/${module}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.common.targets.in)
   add_custom_command(OUTPUT ${nuget_native}/${module}.targets
     COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_native}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/${module}.targets ${nuget_native})
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/${module}.targets ${nuget_native}
+    DEPENDS ${CMAKE_BINARY_DIR}/${module}.targets)
   list(APPEND copy_headers ${nuget_native}/${module}.targets)
 
   # generate the pack step and define the module packaging target
