@@ -91,6 +91,8 @@ add_library(${METAIO_NAMESPACE}
   metaFEMObject.cxx
 )
 
+vtk_nuget_export(LIBRARY ${METAIO_NAMESPACE})
+
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
 # Need nsl to resolve gethostbyname on SunOS-5.8
