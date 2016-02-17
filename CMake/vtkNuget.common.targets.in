@@ -17,10 +17,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <PropertyGroup>
-    <@module@Found>false</@module@Found>
+    <HasSpecific@module@>false</HasSpecific@module@>
+    <HasSpecific@module@ Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@module@.targets')">true</HasSpecific@module@>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@module@.targets"
-          Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@module@.targets')" />
+          Condition="$(HasSpecific@module@)" />
   <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@module@.targets"
-          Condition="!$(@module@Found) And '$(Configuration)' != 'Release' And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@module@.targets')" />
+          Condition="!$(HasSpecific@module@) And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@module@.targets')" />
 </Project>
