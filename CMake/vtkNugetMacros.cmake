@@ -191,6 +191,8 @@ function(vtk_nuget_export type module)
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec)
   list(APPEND copy_headers ${nuget_obj}/${module}.nuspec)
 
+  set(module_implements ${${module}_IMPLEMENTS})
+
   # configure and generate custom targets file to be inserted into a project referencing the package
   configure_file(${VTK_NUGET_TEMPLATE}.common.targets.in ${module}.common.targets.in)
   file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.common.targets.in)
