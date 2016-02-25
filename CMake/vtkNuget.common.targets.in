@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'@module_implements@' != ''">
-    <VTK_@module_implements@_Implementations>@module@;$(VTK_@module_implements@_Implementations)</VTK_@module_implements@_Implementations>
+    <VTK_@module_implements@_Implementations Condition="'$(VTK_@module_implements@_Implementations)' != ''">@module@;$(VTK_@module_implements@_Implementations)</VTK_@module_implements@_Implementations>
+    <VTK_@module_implements@_Implementations Condition="'$(VTK_@module_implements@_Implementations)' == ''">@module@</VTK_@module_implements@_Implementations>
     <VTK_@module_implements@_Count Condition="'$(VTK_@module_implements@_Count)' == '4'">5</VTK_@module_implements@_Count>
     <VTK_@module_implements@_Count Condition="'$(VTK_@module_implements@_Count)' == '3'">4</VTK_@module_implements@_Count>
     <VTK_@module_implements@_Count Condition="'$(VTK_@module_implements@_Count)' == '2'">3</VTK_@module_implements@_Count>
     <VTK_@module_implements@_Count Condition="'$(VTK_@module_implements@_Count)' == '1'">2</VTK_@module_implements@_Count>
     <VTK_@module_implements@_Count Condition="'$(VTK_@module_implements@_Count)' == ''">1</VTK_@module_implements@_Count>
+    <VTK_@module_implements@_Defs>@module_implements@_AUTOINIT=$(VTK_@module_implements@_Count)($(VTK_@module_implements@_Implementations))</VTK_@module_implements@_Defs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'@module_implements@' != '' And !$(VTK_ImplementedModules.Contains('@module_implements@'))">
+    <VTK_ImplementedModules>@module_implements@;$(VTK_ImplementedModules)</VTK_ImplementedModules>
+    <VTK_Defs>$(VTK_@module_implements@_Defs);$(VTK_Defs)</VTK_Defs>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -15,8 +21,7 @@
         $(MSBuildThisFileDirectory)include;
         $(MSBuildThisFileDirectory)include\$(VisualStudioVersion)\$(Platform)
       </AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(VTK_@module_implements@_Count)' != ''">@module_implements@_AUTOINIT=$(VTK_@module_implements@_Count)($(VTK_@module_implements@_Implementations)</PreprocessorDefinitions>
-      @preprocessor_definitions@
+      <PreprocessorDefinitions>$(VTK_Defs);$(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>

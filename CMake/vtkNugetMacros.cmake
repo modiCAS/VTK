@@ -3,7 +3,7 @@
 #
 # To enable NuGet package generation you need to
 #  - choose one of the Visual Studio generators,
-#  - set NUGET_BUILD to ON,
+#  - set BUILD_NUGET to ON,
 #  - specify a path to NuGet.exe in NUGET_COMMAND,
 #  - specify a package directory to generate and store packages in using NUGET_PACKAGE_DIR;
 #      You can either let CMake configure a default subdirectory in the build directory or
@@ -39,19 +39,19 @@ set(VTK_NUGET_TEMPLATE ${CMAKE_CURRENT_LIST_DIR}/vtkNuget)
 
 # allow NuGet packaging only for MSVC builds
 if (MSVC)
-  set(NUGET_BUILD OFF CACHE BOOL "Enable NuGet package builds")
+  set(BUILD_NUGET OFF CACHE BOOL "Enable NuGet package builds")
 else()
-  set(NUGET_BUILD OFF)
+  set(BUILD_NUGET OFF)
 endif()
 
 # search for NuGet.exe if NuGet packaging was requested
-if(NUGET_BUILD)
+if(BUILD_NUGET)
   find_program(NUGET_COMMAND NuGet.exe)
 endif()
 
 # declare an empty function stub and leave if either NuGet packaging is not enabled
 # or if the NuGet.exe tool was not found, as it is required to build and upload the packages
-if(NOT NUGET_BUILD OR NOT NUGET_COMMAND)
+if(NOT BUILD_NUGET OR NOT NUGET_COMMAND)
   function(vtk_nuget_export type module)
   endfunction()
   return()
