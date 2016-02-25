@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>@module@</id>
+    <id>@NUGET_NAME@</id>
     <version>@NUGET_PACK_VERSION@</version>
     <title>@module@ @NUGET_PACK_VERSION@</title>
     <authors>Kitware Inc.</authors>
@@ -12,10 +12,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Visualization Toolkit (VTK) is an open source, freely available software system for 3D computer graphics,
       modeling, image processing, volume rendering, scientific visualization and information visualization.</description>
-    <summary>@module@ VTK module of the Visualization Toolkit (VTK) @NUGET_PACK_VERSION@.</summary>
+    <summary>@NUGET_NAME@ VTK module of the Visualization Toolkit (VTK) @NUGET_PACK_VERSION@.</summary>
     <releaseNotes />
     <copyright>Copyright (c) 1993-2016 Ken Martin, Will Schroeder, Bill Lorensen</copyright>
-    <tags>C++ VTK Visualization Toolkit 3D @module@ @vtk-nuget-keywords@</tags>
+    <tags>C++ VTK Visualization Toolkit 3D @NUGET_NAME@ @vtk_nuget_keywords@</tags>
     <dependencies>
       @vtk_nuget_dependencies@
     </dependencies>
