@@ -91,7 +91,7 @@ add_library(${METAIO_NAMESPACE}
   metaFEMObject.cxx
 )
 
-vtk_nuget_export(LIBRARY ${METAIO_NAMESPACE})
+vtk_nuget_export(LIBRARY ${METAIO_NAMESPACE} NAME vtkMetaIO)
 
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
