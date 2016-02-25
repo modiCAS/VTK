@@ -101,6 +101,11 @@ endif()
 #            See Utilities/KWIML module for an example.
 #
 function(vtk_nuget_export type module)
+  cmake_parse_arguments(NUGET "" "NAME" "HEADERS" ${ARGN})
+  if(NOT NUGET_NAME)
+    set(NUGET_NAME ${module})
+  endif()
+
   # build some package keywords from module name
   string(REGEX REPLACE "([a-z])([A-Z])" "\\1 \\2" vtk_nuget_keywords "${module}")
 
@@ -122,7 +127,7 @@ function(vtk_nuget_export type module)
   # to the list of module headers
   file(GLOB generated_headers ${CMAKE_CURRENT_BINARY_DIR}/*.h*)
   # also add an expected module header file, which is defined at a later time in vtk_module_library
-  set(all_headers ${generated_headers};${_hdrs};${ARGN};${CMAKE_CURRENT_BINARY_DIR}/${module}Module.h)
+  set(all_headers ${generated_headers};${_hdrs};${NUGET_HEADERS};${CMAKE_CURRENT_BINARY_DIR}/${module}Module.h)
 
   # clean up header list, but only if there are any headers at all
   # (there are some modules where this seems not to be the case)
@@ -180,9 +185,11 @@ function(vtk_nuget_export type module)
       COMMAND IF EXIST ${header} ${CMAKE_COMMAND} -E copy_if_different ${header} ${header_path}
       DEPENDS ${header})
     list(APPEND copy_headers ${header_path}/${header_name})
+    list(APPEND vtk_nuget_keywords ${header_name})
   endforeach()
 
   # configure and generate the NuGet package spec
+  string(REPLACE ";" " " vtk_nuget_keywords "${vtk_nuget_keywords}")
   configure_file(${VTK_NUGET_TEMPLATE}.nuspec.in ${module}.nuspec.in)
   file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec.in)
   add_custom_command(OUTPUT ${nuget_obj}/${module}.nuspec
