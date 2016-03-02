@@ -61,6 +61,7 @@ set(NUGET_PACKAGE_DIR ${CMAKE_BINARY_DIR}/NuGet CACHE PATH "Directory used to co
 set(NUGET_SOURCE "" CACHE STRING "NuGet Gallery Push URL")
 set(NUGET_APIKEY "" CACHE STRING "NuGet API Key")
 set(NUGET_PACK_VERSION "${VTK_VERSION}-pre-1" CACHE STRING "NuGet Package Version Number")
+set(NUGET_SUFFIX "${VTK_RENDERING_BACKEND}" CACHE STRING "NuGet Package Suffix (e.g. OpenGL2")
 
 # determine MSBuild-compatible architecture string
 set(NUGET_ARCH Win32)
@@ -105,20 +106,26 @@ function(vtk_nuget_export type module)
   if(NOT NUGET_NAME)
     set(NUGET_NAME ${module})
   endif()
+  if(NUGET_SUFFIX)
+    set(NUGET_NAME ${NUGET_NAME}-${NUGET_SUFFIX})
+  endif()
 
   # build some package keywords from module name
   string(REGEX REPLACE "([a-z])([A-Z])" "\\1 \\2" vtk_nuget_keywords "${module}")
 
   # determine module dependencies
-  set(vtk_nuget_dependencies "${${module}_LINK_DEPENDS};${${module}_PRIVATE_DEPENDS}")
-  list(REMOVE_DUPLICATES vtk_nuget_dependencies)
-
-  # translate dependencies to NuSpec XML style lines
-  string(REGEX REPLACE "([^;]+)(;?)" "<dependency id='\\1' version='${NUGET_PACK_VERSION}' />\\2" vtk_nuget_dependencies "${vtk_nuget_dependencies}")
-  string(REPLACE ";" "\n      " vtk_nuget_dependencies "${vtk_nuget_dependencies}")
+  set(vtk_nuget_dependency_list "${${module}_LINK_DEPENDS};${${module}_PRIVATE_DEPENDS}")
+  list(REMOVE_DUPLICATES vtk_nuget_dependency_list)
+  set(dependency_suffix)
+  if(NUGET_SUFFIX)
+    set(dependency_suffix "-${NUGET_SUFFIX}")
+  endif()
+  foreach(dependency ${vtk_nuget_dependency_list})
+    set(vtk_nuget_dependencies "${vtk_nuget_dependencies}\n      <dependency id='${dependency}${dependency_suffix}' version='${NUGET_PACK_VERSION}' />")
+  endforeach()
 
   # define some target folders
-  set(nuget_obj ${NUGET_PACKAGE_DIR}/obj/${module})
+  set(nuget_obj ${NUGET_PACKAGE_DIR}/obj/${NUGET_NAME})
   set(nuget_native ${nuget_obj}/build/native)
   set(nuget_lib ${nuget_native}/lib/${NUGET_MSVC_VERSION}/${NUGET_ARCH}/$<CONFIG>)
   set(nuget_bin ${NUGET_PACKAGE_DIR}/bin)
@@ -190,31 +197,31 @@ function(vtk_nuget_export type module)
 
   # configure and generate the NuGet package spec
   string(REPLACE ";" " " vtk_nuget_keywords "${vtk_nuget_keywords}")
-  configure_file(${VTK_NUGET_TEMPLATE}.nuspec.in ${module}.nuspec.in)
-  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec.in)
-  add_custom_command(OUTPUT ${nuget_obj}/${module}.nuspec
+  configure_file(${VTK_NUGET_TEMPLATE}.nuspec.in ${NUGET_NAME}.nuspec.in)
+  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.nuspec INPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.nuspec.in)
+  add_custom_command(OUTPUT ${nuget_obj}/${NUGET_NAME}.nuspec
     COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_obj}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec ${nuget_obj}
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${module}.nuspec)
-  list(APPEND copy_headers ${nuget_obj}/${module}.nuspec)
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.nuspec ${nuget_obj}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.nuspec)
+  list(APPEND copy_headers ${nuget_obj}/${NUGET_NAME}.nuspec)
 
   set(module_implements ${${module}_IMPLEMENTS})
 
   # configure and generate custom targets file to be inserted into a project referencing the package
-  configure_file(${VTK_NUGET_TEMPLATE}.common.targets.in ${module}.common.targets.in)
-  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.common.targets.in)
-  add_custom_command(OUTPUT ${nuget_native}/${module}.targets
+  configure_file(${VTK_NUGET_TEMPLATE}.common.targets.in ${NUGET_NAME}.common.targets.in)
+  file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.common.targets.in)
+  add_custom_command(OUTPUT ${nuget_native}/${NUGET_NAME}.targets
     COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_native}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/${module}.targets ${nuget_native}
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${module}.targets)
-  list(APPEND copy_headers ${nuget_native}/${module}.targets)
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets ${nuget_native}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets)
+  list(APPEND copy_headers ${nuget_native}/${NUGET_NAME}.targets)
 
   # generate the pack step and define the module packaging target
-  set(nuget_package ${nuget_bin}/${module}.${NUGET_PACK_VERSION}.nupkg)
+  set(nuget_package ${nuget_bin}/${NUGET_NAME}.${NUGET_PACK_VERSION}.nupkg)
   add_custom_command(OUTPUT ${nuget_package} COMMAND
     ${CMAKE_COMMAND} -E make_directory ${nuget_bin} &&
     ${NUGET_COMMAND} pack -OutputDirectory ${nuget_bin}
-    DEPENDS ${module} ${nuget_obj}/${module}.nuspec ${copy_headers}
+    DEPENDS ${module} ${nuget_obj}/${NUGET_NAME}.nuspec ${copy_headers}
     WORKING_DIRECTORY ${nuget_obj})
 
   add_custom_target(nuget-pack-${module} SOURCES ${nuget_package})
@@ -224,11 +231,11 @@ function(vtk_nuget_export type module)
   # if the module is a library (which is usually the case)
   if(type STREQUAL LIBRARY)
     # configure and generate a platform-specific targets file with platform-specific build properties
-    configure_file(${VTK_NUGET_TEMPLATE}.targets.in ${module}.targets.in)
-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Custom${module}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${module}.targets.in)
+    configure_file(${VTK_NUGET_TEMPLATE}.targets.in ${NUGET_NAME}.targets.in)
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Custom${NUGET_NAME}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets.in)
     add_custom_command(TARGET nuget-pack-${module} PRE_BUILD
       COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_lib}
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/Custom${module}.targets ${nuget_lib})
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/Custom${NUGET_NAME}.targets ${nuget_lib})
 
     # add a command to copy library binary and according symbols file to packaging directory
     add_custom_command(TARGET nuget-pack-${module} PRE_BUILD
@@ -257,5 +264,6 @@ function(vtk_nuget_export type module)
     add_custom_target(nuget-push-${module} SOURCES ${nuget_package}.pushed)
     set_target_properties(nuget-push-${module} PROPERTIES FOLDER "NuGet/push")
     add_dependencies(nuget-push nuget-push-${module})
+    add_dependencies(nuget-push-${module} nuget-pack-${module})
   endif()
 endfunction()
