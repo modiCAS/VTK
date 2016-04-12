@@ -57,11 +57,16 @@ if(NOT BUILD_NUGET OR NOT NUGET_COMMAND)
   return()
 endif()
 
+set(NUGET_SUGGESTED_SUFFIX ${VTK_RENDERING_BACKEND})
+if(NOT BUILD_SHARED_LIBS)
+  set(NUGET_SUGGESTED_SUFFIX static-${VTK_RENDERING_BACKEND})
+endif()
+
 set(NUGET_PACKAGE_DIR ${CMAKE_BINARY_DIR}/NuGet CACHE PATH "Directory used to collect files to be packed in NuGet packages")
 set(NUGET_SOURCE "" CACHE STRING "NuGet Gallery Push URL")
 set(NUGET_APIKEY "" CACHE STRING "NuGet API Key")
 set(NUGET_PACK_VERSION "${VTK_VERSION}-pre-1" CACHE STRING "NuGet Package Version Number")
-set(NUGET_SUFFIX "${VTK_RENDERING_BACKEND}" CACHE STRING "NuGet Package Suffix (e.g. OpenGL2")
+set(NUGET_SUFFIX "${NUGET_SUGGESTED_SUFFIX}" CACHE STRING "NuGet Package Suffix (e.g. static-OpenGL2")
 
 # determine MSBuild-compatible architecture string
 set(NUGET_ARCH Win32)
