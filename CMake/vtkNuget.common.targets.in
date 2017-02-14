@@ -33,10 +33,10 @@
   </ItemDefinitionGroup>
   <PropertyGroup>
     <HasSpecific@NUGET_NAME@>false</HasSpecific@NUGET_NAME@>
-    <HasSpecific@NUGET_NAME@ Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@NUGET_NAME@.targets')">true</HasSpecific@NUGET_NAME@>
+    <HasSpecific@NUGET_NAME@ Condition="Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom_@NUGET_NAME@.targets')">true</HasSpecific@NUGET_NAME@>
   </PropertyGroup>
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom@NUGET_NAME@.targets"
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\$(Configuration)\Custom_@NUGET_NAME@.targets"
           Condition="$(HasSpecific@NUGET_NAME@)" />
-  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@NUGET_NAME@.targets"
-          Condition="!$(HasSpecific@NUGET_NAME@) And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom@NUGET_NAME@.targets')" />
+  <Import Project="$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom_@NUGET_NAME@.targets"
+          Condition="!$(HasSpecific@NUGET_NAME@) And Exists('$(MSBuildThisFileDirectory)lib\$(VisualStudioVersion)\$(Platform)\Release\Custom_@NUGET_NAME@.targets')" />
 </Project>
