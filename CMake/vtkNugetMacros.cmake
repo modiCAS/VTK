@@ -237,10 +237,10 @@ function(vtk_nuget_export type module)
   if(type STREQUAL LIBRARY)
     # configure and generate a platform-specific targets file with platform-specific build properties
     configure_file(${VTK_NUGET_TEMPLATE}.targets.in ${NUGET_NAME}.targets.in)
-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Custom${NUGET_NAME}.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets.in)
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Custom_${NUGET_NAME}_$<CONFIG>.targets INPUT ${CMAKE_CURRENT_BINARY_DIR}/${NUGET_NAME}.targets.in)
     add_custom_command(TARGET nuget-pack-${module} PRE_BUILD
       COMMAND ${CMAKE_COMMAND} -E make_directory ${nuget_lib}
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/Custom${NUGET_NAME}.targets ${nuget_lib})
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/Custom_${NUGET_NAME}_$<CONFIG>.targets ${nuget_lib}/Custom_${NUGET_NAME}.targets)
 
     # add a command to copy library binary and according symbols file to packaging directory
     add_custom_command(TARGET nuget-pack-${module} PRE_BUILD
