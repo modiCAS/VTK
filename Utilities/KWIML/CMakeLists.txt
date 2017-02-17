@@ -21,3 +21,7 @@ if(BUILD_TESTING)
   set(KWIML_TEST_PREFIX vtkkwiml)
 endif()
 add_subdirectory(vtkkwiml)
+
+vtk_nuget_export(INCLUDES vtkkwiml HEADERS vtk_kwiml.h
+	vtkkwiml/include/kwiml/abi.h=>vtkkwiml
+	vtkkwiml/include/kwiml/int.h=>vtkkwiml)
