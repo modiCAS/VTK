@@ -33,7 +33,7 @@
 #   includes. The upload targets should then only be executed after all desired configurations and platforms
 #   were already built.
 #
-# modiCAS GmbH  2016  Alexander Saratow
+# modiCAS GmbH  2016-2018  Alexander Saratow
 #
 set(VTK_NUGET_TEMPLATE ${CMAKE_CURRENT_LIST_DIR}/vtkNuget)
 
@@ -65,7 +65,7 @@ endif()
 set(NUGET_PACKAGE_DIR ${CMAKE_BINARY_DIR}/NuGet CACHE PATH "Directory used to collect files to be packed in NuGet packages")
 set(NUGET_SOURCE "" CACHE STRING "NuGet Gallery Push URL")
 set(NUGET_APIKEY "" CACHE STRING "NuGet API Key")
-set(NUGET_PACK_VERSION "${VTK_VERSION}-pre-1" CACHE STRING "NuGet Package Version Number")
+set(NUGET_PACK_VERSION "${VTK_VERSION}" CACHE STRING "NuGet Package Version Number")
 set(NUGET_SUFFIX "${NUGET_SUGGESTED_SUFFIX}" CACHE STRING "NuGet Package Suffix (e.g. static-OpenGL2")
 
 # determine MSBuild-compatible architecture string
@@ -75,7 +75,7 @@ if(CMAKE_CL_64)
 endif()
 
 # determine MSBuild-compatible visual studio version string
-set(NUGET_MSVC_VERSION 14.0)
+set(NUGET_MSVC_VERSION 15.0)
 if(MSVC10)
   set(NUGET_MSVC_VERSION 10.0)
 elseif(MSVC11)
@@ -84,6 +84,10 @@ elseif(MSVC12)
   set(NUGET_MSVC_VERSION 12.0)
 elseif(MSVC14)
   set(NUGET_MSVC_VERSION 14.0)
+elseif(MSVC15)
+  set(NUGET_MSVC_VERSION 15.0)
+else()
+  message(WARNING "Could not determine MSVC version. Using ${NUGET_MSVC_VERSION} as fallback.")
 endif()
 
 # define a target to generate all NuGet packages

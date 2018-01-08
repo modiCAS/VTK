@@ -5,7 +5,7 @@
     <version>@NUGET_PACK_VERSION@</version>
     <title>@module@ @NUGET_PACK_VERSION@</title>
     <authors>Kitware Inc.</authors>
-    <owners>modiCAS GmbH</owners>
+    <owners>Kitware Inc.</owners>
     <licenseUrl>http://www.vtk.org/VTK/project/license.html</licenseUrl>
     <projectUrl>http://www.vtk.org/VTK/project/project.html</projectUrl>
     <iconUrl>http://www.vtk.org/doc/nightly/html/vtk-logo.gif</iconUrl>
@@ -14,7 +14,7 @@
       modeling, image processing, volume rendering, scientific visualization and information visualization.</description>
     <summary>@module@ VTK module of the Visualization Toolkit (VTK) @NUGET_PACK_VERSION@.</summary>
     <releaseNotes />
-    <copyright>Copyright (c) 1993-2016 Ken Martin, Will Schroeder, Bill Lorensen</copyright>
+    <copyright>Copyright (c) 1993-2018 Ken Martin, Will Schroeder, Bill Lorensen</copyright>
     <tags>C++ VTK Visualization Toolkit 3D @module@ @vtk_nuget_keywords@</tags>
     <dependencies>@vtk_nuget_dependencies@
     </dependencies>
