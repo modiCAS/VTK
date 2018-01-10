@@ -34,8 +34,6 @@ SET VERSION=8.1.0
 CALL :CONFIGURE_PROJECT "Visual Studio 15 2017" vs15
 CALL :BUILD_PROJECT vs15
 
-IF %MISSING_PARAMS% == 0 CALL :PUSH_PROJECT vs15
-
 POPD
 GOTO :EOF
 
@@ -51,31 +49,25 @@ GOTO :EOF
 
 :CONFIGURE_PROJECT
 ECHO Configuring project for %~1 (%2)...
-CALL :CONFIGURE_BUILD "%~1 Win64"	%2-x64-gl2
-CALL :CONFIGURE_BUILD "%~1"			%2-x86-gl2
-CALL :CONFIGURE_BUILD "%~1 Win64"	%2-x64-gl	OpenGL
-CALL :CONFIGURE_BUILD "%~1"			%2-x86-gl	OpenGL
+CALL :CONFIGURE_BUILD "%~1 Win64"	%2-x64-gl2	OpenGL2
+CALL :CONFIGURE_BUILD "%~1"			%2-x86-gl2	OpenGL2
+CALL :CONFIGURE_BUILD "%~1 Win64"	%2-x64-gl	OpenGL	OpenGL
+CALL :CONFIGURE_BUILD "%~1"			%2-x86-gl	OpenGL	OpenGL
 ECHO Configured project for %~1 (%2).
 GOTO :EOF
 
 
 :BUILD_PROJECT
-CALL :BUILD %1-x64-gl2
-CALL :BUILD %1-x86-gl2
-CALL :BUILD %1-x64-gl
-CALL :BUILD %1-x86-gl
-GOTO :EOF
-
-
-:PUSH_PROJECT
-CALL :PUSH %1-x64-gl2
-CALL :PUSH %1-x64-gl
+CALL :BUILD %1-x64-gl2	pack
+CALL :BUILD %1-x86-gl2	push
+CALL :BUILD %1-x64-gl	pack
+CALL :BUILD %1-x86-gl	push
 GOTO :EOF
 
 
 :BUILD
-CALL :BUILD_CONFIGURATION %1 debug
-CALL :BUILD_CONFIGURATION %1 release
+CALL :BUILD_CONFIGURATION %1 debug		pack
+CALL :BUILD_CONFIGURATION %1 release	%2
 GOTO :EOF
 
 
@@ -83,7 +75,7 @@ GOTO :EOF
 IF EXIST %1.%2.built GOTO :BUILD_EXIST
 CD %1
 ECHO Building %2 configuration of %1...
-MSBuild nuget-pack.vcxproj /target:Build /p:Configuration=%2 /m
+MSBuild nuget-%3.vcxproj /target:Build /p:Configuration=%2 /m
 ECHO Built %2 configuration of %1.
 CD ..
 ECHO 1 > %1.%2.built
@@ -92,13 +84,6 @@ GOTO :EOF
 
 :BUILD_EXIST
 ECHO %1 %2 already built.
-GOTO :EOF
-
-
-:PUSH
-CD %1
-MSBuild nuget-push.vcxproj /target:Build /p:Configuration=Release /m
-CD ..
 GOTO :EOF
 
 
@@ -116,7 +101,7 @@ cmake ^
 	-D NUGET_APIKEY=%NUGET_APIKEY% ^
 	-D NUGET_PACKAGE_DIR:PATH=%VTK_NUGET% ^
 	-D NUGET_SOURCE=%NUGET_SOURCE% ^
-	-D NUGET_SUFFIX=%3 ^
+	-D NUGET_SUFFIX=%4 ^
 	-D VTK_RENDERING_BACKEND:STRING=%3 ^
 	-G "%~1" ^
 	%VTK_SRC%

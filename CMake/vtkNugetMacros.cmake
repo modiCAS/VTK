@@ -46,15 +46,22 @@ endif()
 
 # search for NuGet.exe if NuGet packaging was requested
 if(BUILD_NUGET)
-  find_program(NUGET_COMMAND NuGet.exe)
+  set(ProgramFilesx86 "ProgramFiles(x86)")
+  find_program(NUGET_COMMAND NuGet.exe
+    HINTS
+      $ENV{${ProgramFilesx86}}/NuGet/bin)
 endif()
 
 # declare an empty function stub and leave if either NuGet packaging is not enabled
 # or if the NuGet.exe tool was not found, as it is required to build and upload the packages
-if(NOT BUILD_NUGET OR NOT NUGET_COMMAND)
+if(NOT BUILD_NUGET)
   function(vtk_nuget_export type module)
   endfunction()
   return()
+endif()
+
+if(NOT NUGET_COMMAND)
+  message(FATAL_ERROR "NuGet not found.")
 endif()
 
 set(NUGET_SUGGESTED_SUFFIX ${VTK_RENDERING_BACKEND})
@@ -76,19 +83,21 @@ endif()
 
 # determine MSBuild-compatible visual studio version string
 set(NUGET_MSVC_VERSION 15.0)
-if(MSVC10)
+if(MSVC_VERSION EQUAL 1600)
   set(NUGET_MSVC_VERSION 10.0)
-elseif(MSVC11)
+elseif(MSVC_VERSION EQUAL 1700)
   set(NUGET_MSVC_VERSION 11.0)
-elseif(MSVC12)
+elseif(MSVC_VERSION EQUAL 1800)
   set(NUGET_MSVC_VERSION 12.0)
-elseif(MSVC14)
+elseif(MSVC_VERSION EQUAL 1900)
   set(NUGET_MSVC_VERSION 14.0)
-elseif(MSVC15)
+elseif((MSVC_VERSION GREATER 1909) AND (MSVC_VERSION LESS 1920))
   set(NUGET_MSVC_VERSION 15.0)
 else()
   message(WARNING "Could not determine MSVC version. Using ${NUGET_MSVC_VERSION} as fallback.")
 endif()
+
+message(STATUS "Configuring NuGet for MSVC version ${NUGET_MSVC_VERSION}...")
 
 # define a target to generate all NuGet packages
 add_custom_target(nuget-pack)
