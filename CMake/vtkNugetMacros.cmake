@@ -64,16 +64,10 @@ if(NOT NUGET_COMMAND)
   message(FATAL_ERROR "NuGet not found.")
 endif()
 
-set(NUGET_SUGGESTED_SUFFIX ${VTK_RENDERING_BACKEND})
-if(NOT BUILD_SHARED_LIBS)
-  set(NUGET_SUGGESTED_SUFFIX static-${VTK_RENDERING_BACKEND})
-endif()
-
 set(NUGET_PACKAGE_DIR ${CMAKE_BINARY_DIR}/NuGet CACHE PATH "Directory used to collect files to be packed in NuGet packages")
 set(NUGET_SOURCE "" CACHE STRING "NuGet Gallery Push URL")
 set(NUGET_APIKEY "" CACHE STRING "NuGet API Key")
 set(NUGET_PACK_VERSION "${VTK_VERSION}" CACHE STRING "NuGet Package Version Number")
-set(NUGET_SUFFIX "${NUGET_SUGGESTED_SUFFIX}" CACHE STRING "NuGet Package Suffix (e.g. static-OpenGL2")
 
 # determine MSBuild-compatible architecture string
 set(NUGET_ARCH Win32)
@@ -124,9 +118,6 @@ function(vtk_nuget_export type module)
   if(NOT NUGET_NAME)
     set(NUGET_NAME ${module})
   endif()
-  if(NUGET_SUFFIX)
-    set(NUGET_NAME ${NUGET_NAME}-${NUGET_SUFFIX})
-  endif()
 
   # build some package keywords from module name
   string(REGEX REPLACE "([a-z])([A-Z])" "\\1 \\2" vtk_nuget_keywords "${module}")
@@ -134,12 +125,8 @@ function(vtk_nuget_export type module)
   # determine module dependencies
   set(vtk_nuget_dependency_list "${${module}_LINK_DEPENDS};${${module}_PRIVATE_DEPENDS}")
   list(REMOVE_DUPLICATES vtk_nuget_dependency_list)
-  set(dependency_suffix)
-  if(NUGET_SUFFIX)
-    set(dependency_suffix "-${NUGET_SUFFIX}")
-  endif()
   foreach(dependency ${vtk_nuget_dependency_list})
-    set(vtk_nuget_dependencies "${vtk_nuget_dependencies}\n      <dependency id='${dependency}${dependency_suffix}' version='${NUGET_PACK_VERSION}' />")
+    set(vtk_nuget_dependencies "${vtk_nuget_dependencies}\n      <dependency id='${dependency}' version='${NUGET_PACK_VERSION}' />")
   endforeach()
 
   # define some target folders
